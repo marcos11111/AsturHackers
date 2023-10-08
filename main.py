@@ -3,31 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from tensorflow import keras
 #Initial data imput
-Kp=[]
-with open('kpindex.txt', 'r') as archivo:
-    for linea in archivo:
-        if linea.startswith('#'):
-            continue
-        tokens = linea.split()
-        if len(tokens) == 10:
-            YYY, MM, DD, hh_h, hh_m, days, days_m, kp, ap, D = map(float, tokens)
-            Kp.append((YYY, MM, DD, hh_h, hh_m, days, days_m, kp, ap, D))
-        else:
-            print(f"La línea no tiene el formato correcto: {linea}")
-Kp=array(Kp)
-Kp2017=Kp[248376:251296,-3]
-data17 = pd.read_csv("dsc_fc_summed_spectra_2017_v01.csv", \
-delimiter = ',', parse_dates=[0], \
-infer_datetime_format=True, na_values='0', \
-header = None)
-data = data17.iloc[:,:4]
-data2 = pd.DataFrame(index=range(int(len(data[0][:])/180)), columns=range(4))
-for i in range(len(data2[0][:])):
-    data2[0][i] = data[0][180*i]
-    data2[1][i] = data[1][180*i:180*(i+1)-1].mean()
-    data2[2][i] = data[2][180*i:180*(i+1)-1].mean()
-    data2[3][i] = data[3][180*i:180*(i+1)-1].mean()
-data=data2.assign(kpp=Kp2017)
+data = pd.read_hdf('temp.h5', key='df')
 
 #Data preprocessing
 def cleaning(a):
